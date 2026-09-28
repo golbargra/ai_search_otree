@@ -1,0 +1,10 @@
+{{ block title }}Quick check-in{{ endblock }}
+
+{{ block content }}
+<p class="text-muted">Two quick questions about the task you just finished.</p>
+
+{{ formfield 'micro_confidence' }}
+{{ formfield 'micro_difficulty' }}
+
+<button class="otree-btn-next btn btn-primary">Continue</button>
+{{ endblock }}

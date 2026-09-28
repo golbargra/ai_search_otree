@@ -1,0 +1,98 @@
+{{ block title }}
+{{ if is_practice }}Practice Task{{ else }}Task {{ round_number }} of {{ n_total }}{{ endif }}
+{{ endblock }}
+
+{{ block styles }}
+<style>
+  .task-panel { background: #fef3c7; border-left: 5px solid #b45309; padding: 14px 20px; border-radius: 6px; margin-bottom: 16px; }
+  .task-panel h5 { margin-top: 0; }
+  .tool-frame { border: 1px solid #d4d4d8; border-radius: 6px; overflow: hidden; height: 500px; margin-bottom: 12px; }
+  .tool-header { background: #eef2ff; padding: 8px 14px; font-weight: 600; border-bottom: 1px solid #d4d4d8; }
+  .arm-badge { display: inline-block; background: #1e40af; color: white; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+  .answer-form label { font-weight: 600; }
+  .practice-banner { background: #dbeafe; color: #1e40af; padding: 8px 14px; border-radius: 4px; margin-bottom: 12px; font-weight: 600; }
+</style>
+{{ endblock }}
+
+{{ block content }}
+{{ if is_practice }}
+  <div class="practice-banner">🟦 Practice task — not scored, no bonus. Use this round to learn the interface.</div>
+{{ endif }}
+
+<div class="task-panel">
+  <h5>Find a product matching all these constraints:</h5>
+  <ul>
+    <li>Category: <strong>{{ task.category }}</strong></li>
+    <li>Price band: <strong>${{ task.price_min }} – ${{ task.price_max }}</strong></li>
+    <li>Rating: <strong>≥ {{ task.min_rating }} stars</strong></li>
+    <li>Reviews: <strong>≥ {{ task.min_reviews }} reviews</strong></li>
+    <li>Availability: <strong>In stock</strong></li>
+  </ul>
+</div>
+
+<p>Your tool: <span class="arm-badge">{{ arm }}</span> {{ arm_label }}</p>
+
+<div class="row">
+
+  {{ if arm == 'S' or arm == 'B' }}
+  <div class="col-md-6">
+    <div class="tool-frame">
+      <div class="tool-header">🔎 Google (Web filter)</div>
+      <iframe id="search-frame" src="https://www.google.com/search?q=&udm=14"
+              style="width:100%; height:calc(100% - 40px); border: 0;"></iframe>
+    </div>
+  </div>
+  {{ endif }}
+
+  {{ if arm == 'D' }}
+  <div class="col-md-6">
+    <div class="tool-frame">
+      <div class="tool-header">🔎 Google (default view)</div>
+      <iframe id="search-frame" src="https://www.google.com/search?q="
+              style="width:100%; height:calc(100% - 40px); border: 0;"></iframe>
+    </div>
+  </div>
+  {{ endif }}
+
+  {{ if arm == 'A' or arm == 'B' }}
+  <div class="col-md-6">
+    <div class="tool-frame">
+      <div class="tool-header">💬 ChatGPT</div>
+      <iframe id="ai-frame" src="https://chat.openai.com/"
+              style="width:100%; height:calc(100% - 40px); border: 0;"></iframe>
+    </div>
+  </div>
+  {{ endif }}
+
+</div>
+
+<hr>
+
+<div class="answer-form">
+  <h5>Submit your answer</h5>
+  <div class="row">
+    <div class="col-md-6">
+      {{ formfield 'ans_product_name' label="Product name" }}
+      {{ formfield 'ans_url' label="Product URL" }}
+      {{ formfield 'ans_retailer' label="Retailer" }}
+    </div>
+    <div class="col-md-6">
+      {{ formfield 'ans_price' label="Price ($)" }}
+      {{ formfield 'ans_rating' label="Rating (stars)" }}
+      {{ formfield 'ans_reviews' label="Number of reviews" }}
+    </div>
+  </div>
+</div>
+
+<!-- Hidden fields populated by focus-tracker.js -->
+<input type="hidden" id="id_query_log"    name="query_log"    value="[]">
+<input type="hidden" id="id_ai_log"       name="ai_log"       value="[]">
+<input type="hidden" id="id_n_queries"    name="n_queries"    value="0">
+<input type="hidden" id="id_n_ai_turns"   name="n_ai_turns"   value="0">
+<input type="hidden" id="id_n_revisions"  name="n_revisions"  value="0">
+<input type="hidden" id="id_focus_lost"   name="focus_lost"   value="0">
+
+<button class="otree-btn-next btn btn-primary mt-3">Submit answer</button>
+
+<script src="{{ static 'ai_search/focus_tracker.js' }}"></script>
+{{ endblock }}

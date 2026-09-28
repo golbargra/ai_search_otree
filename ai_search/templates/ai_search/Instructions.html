@@ -1,0 +1,25 @@
+{{ block title }}Instructions{{ endblock }}
+
+{{ block content }}
+<div class="card">
+  <div class="card-body">
+    <h5>Your task</h5>
+    <p>You will complete a series of short shopping tasks. In each task, you must find a currently-for-sale product that meets <strong>every listed requirement</strong> — category, price band, minimum star rating, minimum number of reviews, and availability.</p>
+
+    <h5 class="mt-4">Your tool</h5>
+    <p>Throughout the study you will use the following tool:</p>
+    <div class="alert alert-info">
+      <strong>{{ arm_label }}</strong>
+    </div>
+    <p>You may <strong>only</strong> use the tool shown to you. The platform will detect if you switch tabs or open other windows.</p>
+
+    <h5 class="mt-4">How answers are recorded</h5>
+    <p>When you find a product that meets the requirements, you will type its details (name, price, rating, review count, retailer, URL) into a form and click <em>Submit</em>. The URL lets us verify your answer after the session.</p>
+
+    <h5 class="mt-4">Compensation</h5>
+    <p>Your base payment is <strong>${{ C.BASE_PAY }}</strong>. You earn a bonus of <strong>${{ C.BONUS_PER_CORRECT }}</strong> for each fully correct task (all constraints met), capped at ${{ C.BONUS_CAP }}.</p>
+  </div>
+</div>
+
+<button class="otree-btn-next btn btn-primary mt-3">I understand — continue</button>
+{{ endblock }}

@@ -1,0 +1,39 @@
+{{ block title }}Quick Check{{ endblock }}
+
+{{ block content }}
+<p>Before we start, please answer these three items. You must get all three correct to continue.</p>
+
+<form>
+  <div class="form-group">
+    <p><strong>1.</strong> To submit an answer for a task, I must provide:</p>
+    <label><input type="checkbox" name="q1"> product name, price, rating, review count, retailer, and URL</label>
+  </div>
+
+  <div class="form-group mt-3">
+    <p><strong>2.</strong> I may use any tool I like (Google, ChatGPT, both) at any time during scored tasks.</p>
+    <label><input type="radio" name="q2" value="F"> False — I may only use the tool assigned to me</label><br>
+    <label><input type="radio" name="q2" value="T"> True</label>
+  </div>
+
+  <div class="form-group mt-3">
+    <p><strong>3.</strong> If I switch to a different browser tab during a scored task, that action:</p>
+    <label><input type="radio" name="q3" value="A"> is logged by the platform</label><br>
+    <label><input type="radio" name="q3" value="B"> is invisible to the platform</label>
+  </div>
+</form>
+
+{{ formfield 'comp_score' }}
+
+<button class="otree-btn-next btn btn-primary mt-3">Submit</button>
+
+<script>
+  // Auto-compute the comprehension score client-side and stuff into the hidden field.
+  document.querySelector('form').addEventListener('change', () => {
+    let score = 0;
+    if (document.querySelector('input[name="q1"]').checked) score++;
+    if (document.querySelector('input[name="q2"][value="F"]').checked) score++;
+    if (document.querySelector('input[name="q3"][value="A"]').checked) score++;
+    document.querySelector('#id_comp_score').value = score;
+  });
+</script>
+{{ endblock }}

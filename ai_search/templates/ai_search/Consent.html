@@ -1,0 +1,20 @@
+{{ block title }}Consent to Participate{{ endblock }}
+
+{{ block content }}
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Informed Consent</h4>
+    <p>You are being invited to participate in a research study about <strong>online product-search tools</strong>. The study takes about 40–50 minutes and pays a base of ${{ C.BASE_PAY }} plus a performance bonus up to ${{ C.BONUS_CAP }}.</p>
+
+    <p><strong>What you will do.</strong> You will complete a short pre-survey, then a series of product-search tasks, then a short post-survey. Some tasks give you a search engine; some give you an AI assistant; some give you both. The platform will record which tools you use, what you type into them, and how long each task takes.</p>
+
+    <p><strong>Anonymity.</strong> No personally identifying information is stored with your responses. Data are analyzed in aggregate.</p>
+
+    <p><strong>Voluntary.</strong> You may withdraw at any time without penalty.</p>
+
+    <p>By clicking <em>I Consent</em> you agree to participate.</p>
+  </div>
+</div>
+
+<button class="otree-btn-next btn btn-primary">I Consent</button>
+{{ endblock }}

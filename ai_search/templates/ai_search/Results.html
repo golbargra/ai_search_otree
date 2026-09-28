@@ -1,0 +1,19 @@
+{{ block title }}Thank you!{{ endblock }}
+
+{{ block content }}
+<div class="card">
+  <div class="card-body">
+    <h4>Your earnings</h4>
+    <ul>
+      <li>Base payment: <strong>${{ base }}</strong></li>
+      <li>Correct tasks: <strong>{{ n_correct }}</strong></li>
+      <li>Performance bonus: <strong>${{ bonus }}</strong></li>
+    </ul>
+    <h5>Total: <strong>${{ total }}</strong></h5>
+
+    <hr>
+
+    <p class="text-muted">Thank you for participating. Your responses have been recorded. If you were recruited from Prolific, click the link below to be redirected and receive your payment.</p>
+  </div>
+</div>
+{{ endblock }}

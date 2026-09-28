@@ -1,0 +1,27 @@
+{{ block title }}Pre-Survey{{ endblock }}
+
+{{ block content }}
+<p class="text-muted">A few background questions. This section takes about 3 minutes.</p>
+
+<h5 class="mt-4">Demographics</h5>
+{{ formfield 'age_band' }}
+{{ formfield 'gender' }}
+
+<h5 class="mt-4">AI experience</h5>
+<p class="text-muted small">All items on a 1–5 scale: 1 = Not at all / Never; 5 = Extremely / Daily.</p>
+{{ formfield 'ps1' }}
+{{ formfield 'ps2' }}
+{{ formfield 'ps3' }}
+{{ formfield 'ps4' }}
+
+<h5 class="mt-4">AI knowledge check</h5>
+{{ formfield 'ai_lit_1' }}
+{{ formfield 'ai_lit_2' }}
+{{ formfield 'ai_lit_3' }}
+
+<h5 class="mt-4">Attention &amp; shopping habits</h5>
+{{ formfield 'attention_check' }}
+{{ formfield 'shop_freq' }}
+
+<button class="otree-btn-next btn btn-primary mt-3">Continue</button>
+{{ endblock }}
