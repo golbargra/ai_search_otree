@@ -1,77 +1,87 @@
-# AI Product-Search Experiment (classroom pilot) - oTree
+# How to Run the AI Product-Search Study
 
-Implements `docs/AI_Product_Search_Proposal.md`: four between-subjects groups, one practice
-task plus six scored product-search tasks, surveys, and data exports.
+**Quick guide for the oTree app (`ai_search_otree`)**
 
-| Group | Tools | How it works in oTree |
-|---|---|---|
-| S | Google, Web filter | Search box on the task page opens `google.com/search?udm=14&q=...` in a new tab |
-| D | Google, default view | Search box opens `google.com/search?q=...` (AI Overviews may appear) |
-| A | ChatGPT only | Button opens the public ChatGPT website in a new tab |
-| B | ChatGPT + Google Web filter | Both of the above |
+## 1. One-time setup
 
-## Session flow
-Consent -> Background survey -> AI-limitations knowledge (3 items) -> **group assigned** ->
-Instructions (group-specific) -> Comprehension check (up to 3 tries; feedback on try 2,
-standard clarification on try 3; if still wrong, no scored tasks) -> Practice task (3 min) ->
-6 x [Start page -> Task (4 min) -> Ratings] -> Post-survey -> Completion.
+Do this on the laptop that will run the study.
 
-## Run it
-```bash
-pip install -r requirements.txt
-otree devserver          # test at http://localhost:8000
-otree test ai_search 8   # automated bot run-through
+1.  Install Python (3.10 or newer) from python.org.
+2.  Unzip `ai_search_otree.zip`.
+3.  Open Terminal (Mac) or Command Prompt (Windows) and run:
+
+``` bash
+cd path/to/ai_search_otree
+pip install otree
 ```
-For class, use `otree prodserver` (or oTree Hub/Heroku). Set `OTREE_ADMIN_PASSWORD`,
-`OTREE_SECRET_KEY`, and `OTREE_PRODUCTION=1`. Create a session in the **classroom** room
-with the number of students, and give students the room link.
 
-Settings you may change in `settings.py`: `task_seconds` (240), `practice_seconds` (180),
-`ai_url` (https://chatgpt.com/), `participation_fee` (5), `bonus_per_correct` (0.50),
-`max_total_pay` (8).
+## 2. Try it yourself first
 
-## What is implemented from the proposal
-- **Assignment:** blocks of four (S/D/A/B shuffled) within two strata of PS2 prior AI use
-  (never / less than weekly vs weekly or more), done after baseline items. Stored as
-  `arm` and `randomization_block` (e.g. `low-2`).
-- **Tasks:** `task_bank.py`. Each student gets all 6 categories (2 easy, 2 medium, 2 hard);
-  each category uses one of 3 prechecked variants; order shuffled; seed saved (`participant.seed`).
-- **Timing:** server-side deadline set when requirements are revealed; the same deadline
-  holds after a refresh; late submissions count as timeouts. Draft answers autosave and are
-  restored after refresh; on timeout the draft is kept (`draft_json`) but not counted as submitted.
-- **Answer form:** product, variant, retailer, seller, URL, price, rating, rating count,
-  stock, extra attribute, each with "Could not verify"; "I could not find one" button.
-- **Surveys:** wording from Section 8, incl. attention check ("Sometimes"), category
-  familiarity, per-task confidence (only if submitted) / difficulty / effort, post-survey with
-  "Cannot judge" (coded -1), workload items, open text, B-only tool question.
-- **No automatic scoring.** oTree stores what students report; reviewers verify later.
+1.  Run:
 
-## Data exports (Admin -> Data)
-- **ai_search (per app)**: one row per student x round (round 1 = practice, rounds 2-7 =
-  scored): `arm, randomization_block, task_order, task_id, template_id, difficulty,
-  task_params, start_ts, end_ts, time_sec, submitted, no_answer, timed_out, ans_*,
-  confidence, difficulty_rating, effort_rating, n_launcher_queries, n_chatgpt_opens,
-  first_action_sec, focus_lost`. Pre-survey answers are in round 1, post-survey in round 7.
-- **ai_search custom export**: event log (launcher searches with query text, ChatGPT opens,
-  focus lost/back, task end) with seconds into the task.
-- Reviewer scoring (`verified_success`, `constraint_status_*`, ...) goes in a separate sheet
-  keyed by `participant.code` + `task_id`, merged for analysis.
+``` bash
+otree devserver
+```
 
-## Deviations from the proposal (report these)
-1. **ChatGPT is the public website, not an API assistant inside oTree.** oTree cannot see
-   ChatGPT messages, so `n_ai_turns`, `ai_transcript`, and the model used must come from
-   screen recordings. oTree cannot stop S/D students from opening ChatGPT on their own;
-   compliance relies on instructions and recordings.
-2. Only searches typed into the oTree launcher are logged; later searches inside the Google
-   tab come from recordings (missing, not zero, if footage is incomplete).
-3. `focus_lost` also counts refreshes and tab switches; never use it for exclusion.
+2.  Open `http://localhost:8000` in your browser.
+3.  Click **ai_search** under **Demo**, click a participant link, and go
+    through the study as a student.
+4.  To stop, press `Ctrl + C` in the terminal.
 
-## Before-class checklist
-- [ ] Check all 18 task variants (+ practice) on the live web; delete infeasible ones in `task_bank.py`.
-- [ ] On a lab computer: Web-filter link shows no AI Overview; default Google works; ChatGPT
-      opens with web search. Decide logged-in (study accounts) vs logged-out ChatGPT; same for everyone.
-- [ ] Allow pop-ups from the oTree site in the study browser (tools open in new tabs).
-- [ ] Clean browser profiles, same location/language; note settings in session notes.
-- [ ] Screen recording set up and linked to each student's study code (shown on completion page).
-- [ ] Fill in consent details (payment, recording retention) in `Consent.html`.
-- [ ] Full dry run with 4+ people, then export and check the data.
+## 3. On class day
+
+1.  Connect the laptop to the same Wi-Fi as the students.
+2.  Start the study server.
+
+### Mac
+
+``` bash
+export OTREE_ADMIN_PASSWORD=pick_a_password
+export OTREE_PRODUCTION=1
+otree prodserver 8000
+```
+
+### Windows
+
+``` cmd
+set OTREE_ADMIN_PASSWORD=pick_a_password
+set OTREE_PRODUCTION=1
+otree prodserver 8000
+```
+
+3.  Find the laptop's IP address:
+
+    -   **Mac:** System Settings \> Wi-Fi \> Details
+    -   **Windows:** type `ipconfig` and look for **IPv4 Address**.
+
+    It looks like `192.168.1.25`.
+
+4.  On the laptop, open `http://localhost:8000`, log in as admin with
+    your password, then go to **Rooms \> classroom \> Create session**.
+    Enter the number of students and click **Create**.
+
+5.  Write this link on the board, using your laptop's IP:
+
+``` text
+http://192.168.1.25:8000/room/classroom
+```
+
+6.  Students open the link and follow the screens. Keep the laptop on
+    and awake until everyone finishes.
+
+## 4. Get the data
+
+1.  On the laptop, open `http://localhost:8000` \> **Data**.
+2.  Download both files:
+    -   **ai_search** --- answers, times, surveys
+    -   **ai_search custom** --- search and ChatGPT activity log
+3.  Only after the files are saved, stop the server with `Ctrl + C`.
+
+## If something goes wrong
+
+-   **Students can't open the link:** Check that they are on the same
+    Wi-Fi and allow Python through the laptop's firewall.
+-   **Google or ChatGPT won't open:** Allow pop-ups for the study site
+    in the browser.
+-   **A student refreshes the page:** That's fine. Their timer and typed
+    answers stay.
