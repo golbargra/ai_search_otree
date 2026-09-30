@@ -1,0 +1,24 @@
+{{ block title }}About you{{ endblock }}
+{{ block content }}
+{{ formfield 'age_group' }}
+{{ formfield 'study_year' }}
+{{ formfield 'major' }}
+<hr>
+{{ formfield 'ps1' }}
+{{ formfield 'ps2' }}
+{{ formfield 'ps3' }}
+{{ formfield 'ps4' }}
+{{ formfield 'search_freq' }}
+{{ formfield 'shop_freq' }}
+<hr>
+<p><strong>How familiar are you with shopping for each of these products?</strong> (1 = not at all, 5 = extremely)</p>
+{{ formfield 'fam_mouse' }}
+{{ formfield 'fam_kettle' }}
+{{ formfield 'fam_headphones' }}
+{{ formfield 'fam_backpack' }}
+{{ formfield 'fam_vacuum' }}
+{{ formfield 'fam_speaker' }}
+<hr>
+{{ formfield 'attention_check' }}
+{{ next_button }}
+{{ endblock }}

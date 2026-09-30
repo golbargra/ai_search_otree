@@ -1,0 +1,27 @@
+{{ block title }}Instructions{{ endblock }}
+{{ block content }}
+<div class="card mb-3"><div class="card-body">
+<h5>Your assigned tools: {{ arm_label }}</h5>
+{{ if arm == 'S' }}
+<p>Use <strong>Google with the Web filter</strong> only. Type your search in the search box on the task page. Results open in a new browser tab.</p>
+{{ elif arm == 'D' }}
+<p>Use <strong>regular Google search</strong> only. Type your search in the search box on the task page. Results open in a new browser tab. Google may show an AI Overview at the top; that is fine. Do <strong>not</strong> use Google's "AI Mode" tab.</p>
+{{ elif arm == 'A' }}
+<p>Use <strong>ChatGPT</strong> only. Click "Open ChatGPT" on the task page; it opens in a new browser tab. <strong>Start a new chat for each task.</strong> Do not use Google or any other search engine.</p>
+{{ else }}
+<p>Use <strong>ChatGPT</strong> and <strong>Google with the Web filter</strong>. You may use either one or both, as you like. <strong>Start a new ChatGPT chat for each task.</strong> Do not use Google's "AI Mode" or other AI tools.</p>
+{{ endif }}
+</div></div>
+<h5>Rules for every task</h5>
+<ul>
+  <li>Find <strong>one new product that meets every requirement</strong> shown. More than one answer can be correct. You do not need the cheapest or best one.</li>
+  <li>You may open product pages reached through your assigned tools to check details, and choose a size or color there.</li>
+  <li>Do <strong>not</strong> start a new search inside a store's website (e.g., Amazon's search box), and do not use any other website, app, or AI tool.</li>
+  <li>You do <strong>not</strong> buy anything.</li>
+  <li>Come back to this tab to enter the product name, retailer, price, rating, number of customer ratings, availability, and product-page link. If you cannot check a detail, tick "Could not verify" instead of guessing.</li>
+  <li>If you cannot find a suitable product, click <strong>"I could not find one."</strong></li>
+  <li>Each task has <strong>{{ minutes }} minutes</strong>. The timer keeps running while you are in other tabs. Before submitting, keep the final product page open for a few seconds so the recording captures it.</li>
+</ul>
+<p>First you will answer a few questions about these rules, then do one practice task.</p>
+{{ next_button }}
+{{ endblock }}

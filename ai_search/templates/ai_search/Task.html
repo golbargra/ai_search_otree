@@ -1,0 +1,102 @@
+{{ block title }}{{ if is_practice }}Practice task (not scored){{ else }}Task {{ n }} of {{ n_total }}{{ endif }}{{ endblock }}
+
+{{ block styles }}
+<style>
+  .req { background:#fef3c7; border-left:5px solid #b45309; padding:12px 18px; border-radius:6px; }
+  .tools { background:#eef2ff; padding:12px 18px; border-radius:6px; }
+  .nv { font-size: .9em; }
+</style>
+{{ endblock }}
+
+{{ block content }}
+<div class="req mb-3">
+  <p class="mb-1"><strong>Find one new product that meets every requirement below.</strong></p>
+  <ul class="mb-1">{{ for r in requirements }}<li>{{ r }}</li>{{ endfor }}</ul>
+  <small>Use only your assigned tools. You may inspect permitted product links to check the details. You do not need to buy anything. More than one answer can be correct.</small>
+</div>
+
+<div class="tools mb-3">
+  <p class="mb-2"><strong>Your tools: {{ arm_label }}</strong> (open in a new tab; come back here to submit)</p>
+  {{ if show_search }}
+  <div class="input-group mb-2" style="max-width:600px">
+    <input type="text" id="search-q" class="form-control" placeholder="Search {{ search_label }}">
+    <button type="button" class="btn btn-outline-primary" onclick="doSearch()">Search {{ search_label }}</button>
+  </div>
+  {{ endif }}
+  {{ if show_ai }}
+  <button type="button" class="btn btn-outline-success" onclick="openAI()">Open ChatGPT (start a new chat)</button>
+  {{ endif }}
+</div>
+
+<h5>Your answer</h5>
+<div class="row" id="answer-form">
+  <div class="col-md-6">
+    {{ formfield 'ans_product' }}
+    {{ formfield 'ans_variant' }}
+    {{ formfield 'ans_retailer' }}
+    {{ formfield 'ans_seller' }}
+    {{ formfield 'ans_url' }}
+  </div>
+  <div class="col-md-6">
+    {{ formfield 'ans_price' }} <div class="nv mb-3">{{ formfield 'ans_price_nv' }}</div>
+    {{ formfield 'ans_rating' }} <div class="nv mb-3">{{ formfield 'ans_rating_nv' }}</div>
+    {{ formfield 'ans_count' }} <div class="nv mb-3">{{ formfield 'ans_count_nv' }}</div>
+    {{ formfield 'ans_stock' }}
+    {{ if has_attr }}
+      {{ formfield 'ans_attribute' label=task.attribute }} <div class="nv mb-3">{{ formfield 'ans_attribute_nv' }}</div>
+    {{ endif }}
+  </div>
+</div>
+
+<input type="hidden" name="result_choice" id="result_choice" value="">
+<div class="mt-3">
+  <button class="btn btn-primary" onclick="document.getElementById('result_choice').value='submitted'">Submit selected product</button>
+  <button class="btn btn-secondary ms-2" onclick="document.getElementById('result_choice').value='no_answer'; return confirm('Submit that you could not find a product?');">I could not find one</button>
+</div>
+<p class="text-muted mt-2"><small>Your entries are saved automatically as you type, but only count once you click a button before time runs out.</small></p>
+
+<script>
+function doSearch() {
+  const q = document.getElementById('search-q').value.trim();
+  if (!q) return;
+  liveSend({kind: 'search', detail: q});
+  window.open(js_vars.search_url + encodeURIComponent(q), 'study_tools');
+}
+function openAI() {
+  liveSend({kind: 'open_chatgpt', detail: ''});
+  window.open(js_vars.ai_url, 'study_ai');
+}
+document.getElementById('search-q')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
+});
+document.addEventListener('visibilitychange', () => {
+  liveSend({kind: document.hidden ? 'focus_lost' : 'focus_back', detail: ''});
+});
+
+// Draft autosave + restore after refresh
+const form = document.getElementById('form');
+const fields = () => form.querySelectorAll('#answer-form input, #answer-form select, #answer-form textarea');
+function draftValues() {
+  const d = {};
+  fields().forEach(el => { if (el.name) d[el.name] = el.type === 'checkbox' ? el.checked : el.value; });
+  return d;
+}
+let t = null;
+form.addEventListener('input', () => {
+  clearTimeout(t);
+  t = setTimeout(() => liveSend({kind: 'draft', detail: draftValues()}), 800);
+});
+window.addEventListener('DOMContentLoaded', () => {
+  const d = js_vars.draft || {};
+  const hasServerErrors = form.querySelector('.is-invalid, .form-control-errors, .alert-danger');
+  if (hasServerErrors) return;  // browser already shows what was typed
+  fields().forEach(el => {
+    if (!(el.name in d)) return;
+    if (el.type === 'checkbox') el.checked = !!d[el.name];
+    else if (el.type === 'radio') el.checked = (el.value === d[el.name]);
+    else if (!el.value) el.value = d[el.name];
+  });
+});
+function liveRecv(data) {}
+</script>
+{{ endblock }}

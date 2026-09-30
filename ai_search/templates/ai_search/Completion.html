@@ -1,0 +1,15 @@
+{{ block title }}Thank you{{ endblock }}
+{{ block content }}
+{{ if not consented }}
+<p>You chose not to take part. Thank you for your time. You may close this page.</p>
+{{ else }}
+<p>You have completed the study. Thank you!</p>
+{{ if excluded }}
+<p>Thank you for going through the instructions. You will not do the scored tasks today; you will still receive the participation payment.</p>
+{{ else }}
+<p><strong>Payment:</strong> ${{ base }} for taking part, plus ${{ bonus }} for each task that the research team verifies as meeting every requirement, up to ${{ max_total }} in total. Your answers are checked after the session, so any bonus is paid later, as described in the consent form.</p>
+{{ endif }}
+<p>Your study code: <strong>{{ code }}</strong></p>
+<p>Please close all browser tabs you opened for the study.</p>
+{{ endif }}
+{{ endblock }}

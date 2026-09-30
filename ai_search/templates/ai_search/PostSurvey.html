@@ -1,0 +1,18 @@
+{{ block title }}Final questions{{ endblock }}
+{{ block content }}
+<p><strong>Think about the tool or combination of tools assigned to you.</strong> (1 = strongly disagree, 7 = strongly agree)</p>
+{{ formfield 'post_easy' }}
+{{ formfield 'post_trust' }}
+{{ formfield 'post_reuse' }}
+{{ formfield 'post_ads' }}
+{{ formfield 'post_fast' }}
+<hr>
+{{ formfield 'wl_mental' }}
+{{ formfield 'wl_effort' }}
+{{ formfield 'wl_frustration' }}
+<hr>
+{{ if player.arm == 'B' }}{{ formfield 'b_tool_mainly' }}{{ endif }}
+{{ formfield 'open_easy_hard' }}
+{{ formfield 'open_confusing' }}
+{{ next_button }}
+{{ endblock }}

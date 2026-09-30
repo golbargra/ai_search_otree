@@ -1,0 +1,18 @@
+{{ block title }}Check your understanding{{ if attempt > 1 }} (try {{ attempt }}){{ endif }}{{ endblock }}
+{{ block content }}
+{{ if feedback }}
+<div class="alert alert-warning">
+  <p><strong>Some answers were not correct. Please review:</strong></p>
+  <ul>{{ for f in feedback }}<li>{{ f }}</li>{{ endfor }}</ul>
+</div>
+{{ endif }}
+{{ if clarify }}
+<div class="alert alert-info">
+  <strong>Clarification:</strong> In each task you look for ONE product that meets ALL the requirements, using ONLY your assigned tools
+  (<strong>{{ arm_label }}</strong>). You never buy anything. If you cannot find a product that meets all requirements, click
+  "I could not find one." You may raise your hand to ask the study staff to repeat this clarification.
+</div>
+{{ endif }}
+{{ formfields }}
+{{ next_button }}
+{{ endblock }}

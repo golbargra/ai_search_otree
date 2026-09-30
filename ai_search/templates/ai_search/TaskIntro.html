@@ -1,0 +1,10 @@
+{{ block title }}{{ if is_practice }}Practice task{{ else }}Task {{ n }} of {{ n_total }}{{ endif }}{{ endblock }}
+{{ block content }}
+{{ if is_practice }}
+<p>This practice task is <strong>not scored</strong>. Use it to learn how the tools and answer form work.</p>
+{{ else }}
+<p>When you click Start, the requirements appear and the timer starts.</p>
+{{ endif }}
+<p>Close any tabs from the previous task before you start.</p>
+<button class="btn btn-primary">Start</button>
+{{ endblock }}
