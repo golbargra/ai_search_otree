@@ -52,19 +52,39 @@ These command-line bots check forms and flow. They do not measure simultaneous b
 
 ## Hosting about 70 students at once
 
-**Recommended:** use oTree Hub to deploy to a paid Heroku production server with Postgres, or use an existing university oTree server maintained by IT. The present app makes lightweight survey and event requests; Google and ChatGPT traffic goes directly from students' browsers to those providers. There is no shared AI API queue on the oTree server. This architecture is suitable to test for 70 concurrent students, but no capacity guarantee follows from participant count alone.
+**For this class, use the instructor's laptop as the local server. No paid cloud hosting is required.** Students open the laptop's network address from their own devices. Google and ChatGPT still require internet access. The laptop serves oTree pages and stores the local database. This setup must pass a rehearsal on the classroom network; the automated participant-flow tests are not a simultaneous capacity test.
 
-| Option | Advantages | What to check |
-|---|---|---|
-| oTree Hub / paid Heroku | Public HTTPS link; deployment and monitoring support | Hosting/database tier, WebSockets, and tested capacity; follow oTree's guidance to use one web dyno and upgrade its size if needed |
-| University production server | Existing support, network access, and data arrangements | Supported oTree version, Postgres, HTTPS, WebSockets, and IT availability during class |
-| Laptop on classroom network | Convenient for a small rehearsal | Firewall, campus client isolation, sleep, database contention, and network stability; use for class only after a full load rehearsal |
+### Windows / PowerShell local setup
 
-Do not use `otree devserver` for the live class. On a managed Linux server use `otree prodserver 8000`, Postgres configured through `DATABASE_URL`, production mode, a private admin password, and a strong `OTREE_SECRET_KEY`. A reverse proxy must support WebSockets. Let IT or oTree Hub manage the actual setup.
+Install the dependencies ahead of class. Open PowerShell in this repository and run:
+
+```powershell
+pip install -r requirements.txt
+$env:OTREE_ADMIN_PASSWORD = Read-Host "Choose an admin password"
+$env:OTREE_SECRET_KEY = [guid]::NewGuid().ToString('N') + [guid]::NewGuid().ToString('N')
+$env:OTREE_PRODUCTION = "1"
+otree prodserver 8000
+```
+
+Keep this window open. In this installed oTree version, `prodserver` listens on all network interfaces. Open `http://localhost:8000` on the instructor laptop and sign in. Use Rooms → classroom → Create session. Select `ai_search_70` for 70 people, or `ai_search` with 69 for exact 23/23/23 allocation.
+
+In another PowerShell window run `ipconfig`. Find the IPv4 address of the active classroom Wi-Fi or Ethernet adapter, not a VPN or virtual adapter. For example, if it is `192.168.1.25`, students open:
+
+```text
+http://192.168.1.25:8000/room/classroom/
+```
+
+Use the actual address. `localhost` only works on the instructor laptop. For individual links from the admin page, replace the `localhost:8000` portion with the laptop's IP address and port, preserving the rest of each URL.
+
+Allow Python/oTree through Windows Firewall for the classroom network or ask IT for a scoped inbound rule for TCP port 8000. Do not disable the firewall. Keep the laptop plugged in, prevent sleep while plugged in, and do not close the lid or terminal during collection. Use the same server process and secret key throughout the session. With no `DATABASE_URL`, this local setup uses oTree's local SQLite database; preserve `db.sqlite3`, export the data, and do not reset it after collection. If returning on another day, restore the same private secret key rather than generating a new one.
+
+**Critical check:** campus Wi-Fi may block connections between student devices and the instructor laptop even when both are on the same network. Test from a second device in the actual classroom before class day. If blocked, ask campus IT for a permitted lab network or a network arrangement that allows local TCP/WebSocket traffic. An allowed private router can be an alternative only if student devices can reach the laptop and still access Google/ChatGPT. A phone hotspot is not a dependable plan for 70 devices. If no available network allows devices to reach the laptop, a shared local session cannot run until that connectivity is resolved.
+
+Other no-cloud options include a campus lab computer acting as the server on a permitted lab network, or another instructor laptop on the same reachable network. Internet access remains necessary for the external search and AI tasks.
 
 ### Rehearsal before class
 
-1. Deploy this version to a separate test session on the intended host.
+1. Start this version on the instructor laptop and create a separate test session on the actual classroom network.
 2. Use oTree browser bots or a browser load harness with at least 70 concurrent participants (ideally 80 for headroom). Exercise page transitions, live autosave messages, simultaneous final submissions, and exports. Command-line bot success is not a load test.
 3. Test deadlines, tab switching, refresh recovery, and timeout handling on actual student browsers. Suggested acceptance criteria: no server errors or lost submitted records, responsive pages (e.g. under two seconds in normal conditions), and consistent exported assignments and task counts.
 4. Run a short real-device rehearsal on campus Wi-Fi. Check Google Web results, retailer pages, pop-ups, and ChatGPT login, model/web access, and account limits. About 46–47 students may use ChatGPT at once, each through their own permitted access. Avoid sharing one personal ChatGPT account.
@@ -73,10 +93,10 @@ Do not use `otree devserver` for the live class. On a managed Linux server use `
 
 ### On class day
 
-Create a fresh session in **Rooms → classroom**, selecting `ai_search` with a multiple of three or `ai_search_70` with 70. Distribute the actual session participant links once per student, or the configured room URL:
+On the instructor laptop, create a fresh session in **Rooms → classroom**, selecting `ai_search` with a multiple of three or `ai_search_70` with 70. Distribute the actual session participant links once per student, or the configured room URL:
 
 ```text
-https://YOUR-HOST/room/classroom/
+http://YOUR-LAPTOP-IP:8000/room/classroom/
 ```
 
 Students can all participate at once and work at their own pace. There is no waiting for other participants between tasks. Keep the server running until everyone finishes. If someone disconnects, reopen their existing participant link; do not allocate a second slot. The task deadline continues during external browsing or a disconnect, and only drafts that reached the server can be recovered.
