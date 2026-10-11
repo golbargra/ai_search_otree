@@ -6,7 +6,11 @@ from . import *
 class PlayerBot(Bot):
     def play_round(self):
         r = self.round_number
-        arm_bad = False
+        expect(self.participant.arm in C.ARMS, True)
+        expect(self.player.arm, self.participant.arm)
+        expect(len(self.participant.battery), 3)
+        expect(sorted(t['difficulty'] for t in self.participant.battery),
+               ['easy', 'hard', 'medium'])
         if r == 1:
             yield Consent, dict(consent=True)
             yield Background, dict(

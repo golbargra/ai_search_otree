@@ -3,12 +3,11 @@ AI product-search experiment (classroom pilot) - oTree app.
 
 Groups (between-subjects, fixed for the whole session):
   S = Google with the Web filter (udm=14), no AI
-  D = Default Google (AI Overviews may appear)
   A = ChatGPT only (public website, opened in a new tab)
   B = ChatGPT + Google Web filter
 
 Round 1 = consent, surveys, assignment, instructions, comprehension, practice.
-Rounds 2-7 = six scored tasks (4 minutes each) + ratings after each.
+Rounds 2-4 = three scored tasks (4 minutes each) + ratings after each.
 Last round also shows the post-survey and the completion page.
 
 oTree records answers only. Correctness is verified later by reviewers.
@@ -21,22 +20,20 @@ from otree.api import *
 
 from . import task_bank
 
-doc = "AI product-search experiment (four groups, six tasks)."
+doc = "AI product-search experiment (three groups, three tasks)."
 
 
 class C(BaseConstants):
     NAME_IN_URL = 'ai_search'
     PLAYERS_PER_GROUP = None
-    NUM_ROUNDS = 1 + task_bank.N_SCORED_TASKS  # practice + 6 scored
-    ARMS = ['S', 'D', 'A', 'B']
+    NUM_ROUNDS = 1 + task_bank.N_SCORED_TASKS  # practice + 3 scored
+    ARMS = ['S', 'A', 'B']
     ARM_LABELS = {
         'S': 'Google search (Web filter)',
-        'D': 'Google search (default view)',
         'A': 'ChatGPT',
         'B': 'ChatGPT and Google search (Web filter)',
     }
     GOOGLE_WEB = 'https://www.google.com/search?udm=14&q='
-    GOOGLE_DEFAULT = 'https://www.google.com/search?q='
     CANNOT_JUDGE = -1
 
 
@@ -75,35 +72,30 @@ class Subsession(BaseSubsession):
 
 def creating_session(subsession: Subsession):
     if subsession.round_number != 1:
+        for p in subsession.get_players():
+            p.arm = p.participant.arm
+            p.randomization_block = p.in_round(1).randomization_block
         return
-    session = subsession.session
-    session.blocks = {'low': [], 'high': []}
-    session.block_counts = {'low': 0, 'high': 0}
+    players = subsession.get_players()
+    n_arms = len(C.ARMS)
+    if subsession.session.config.get('require_equal_arms', True) and len(players) % n_arms:
+        raise ValueError(
+            'Equal arms require a participant count divisible by 3 (e.g. 69 or 72). '
+            'To include exactly 70, select ai_search_70 (24/23/23).')
+    # Allocate once, before requests arrive. No shared mutable assignment queue.
+    # Each consecutive triplet gets the same battery, one participant per arm.
     master = random.Random()
-    for p in subsession.get_players():
+    for index, p in enumerate(players):
+        if index % n_arms == 0:
+            seed = master.randint(1, 10**9)
         pp = p.participant
-        pp.seed = master.randint(1, 10**9)
-        pp.battery = task_bank.build_battery(pp.seed)
-        pp.arm = ''
+        pp.seed = seed
+        pp.battery = task_bank.build_battery(seed)
+        pp.arm = C.ARMS[index % n_arms]
         pp.consented = True
         pp.excluded = False
-
-
-def assign_arm(player):
-    """Blocks of four within prior AI use (PS2): less than weekly vs weekly+."""
-    session = player.session
-    stratum = 'low' if player.ps2 <= 2 else 'high'
-    blocks, counts = session.blocks, session.block_counts
-    if not blocks[stratum]:
-        new_block = list(C.ARMS)
-        random.shuffle(new_block)
-        blocks[stratum] = new_block
-        counts[stratum] += 1
-    arm = blocks[stratum].pop()
-    session.blocks, session.block_counts = blocks, counts  # save
-    player.participant.arm = arm
-    player.arm = arm
-    player.randomization_block = f"{stratum}-{counts[stratum]}"
+        p.arm = pp.arm
+        p.randomization_block = f'triplet-{index // n_arms + 1}'
 
 
 class Group(BaseGroup):
@@ -194,7 +186,7 @@ class Player(BasePlayer):
 
     # --- task record (one per round)
     is_practice = models.BooleanField()
-    task_order = models.IntegerField()      # 0 = practice, 1..6 scored
+    task_order = models.IntegerField()      # 0 = practice, 1..3 scored
     task_id = models.StringField()
     template_id = models.StringField()
     difficulty = models.StringField()
@@ -317,7 +309,6 @@ class Knowledge(Page):
     def before_next_page(player, timeout_happened):
         player.ai_limitations_knowledge = sum([
             player.know1 == 'True', player.know2 == 'Retailer product page', player.know3 == 'False'])
-        assign_arm(player)  # randomize after baseline items
 
 
 class Instructions(Page):
@@ -447,13 +438,12 @@ class Task(Page):
                     arm_label=C.ARM_LABELS[arm], is_practice=player.round_number == 1,
                     n=player.round_number - 1, n_total=task_bank.N_SCORED_TASKS,
                     has_attr=bool(t.get('attribute')),
-                    show_search=arm in ('S', 'D', 'B'), show_ai=arm in ('A', 'B'),
-                    search_label='Google (Web filter)' if arm in ('S', 'B') else 'Google')
+                    show_search=arm in ('S', 'B'), show_ai=arm in ('A', 'B'),
+                    search_label='Google (Web filter)')
 
     @staticmethod
     def js_vars(player):
-        arm = player.participant.arm
-        return dict(search_url=C.GOOGLE_DEFAULT if arm == 'D' else C.GOOGLE_WEB,
+        return dict(search_url=C.GOOGLE_WEB,
                     ai_url=player.session.config['ai_url'],
                     draft=json.loads(player.draft_json or '{}'))
 
@@ -476,7 +466,7 @@ class Task(Page):
                 return  # not permitted for AI-only
             player.n_launcher_queries += 1
         elif kind == 'open_chatgpt':
-            if player.participant.arm in ('S', 'D'):
+            if player.participant.arm == 'S':
                 return  # not permitted for search groups
             player.n_chatgpt_opens += 1
         elif kind == 'focus_lost':

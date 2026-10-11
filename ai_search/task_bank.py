@@ -1,8 +1,7 @@
 """
 Task bank for the AI product-search experiment (proposal Section 5).
 
-Each participant gets 6 scored tasks: one per category, so 2 easy,
-2 medium and 2 hard. Individualization comes from a FINITE, PRECHECKED
+Each participant gets 3 scored tasks: one easy, one medium and one hard. Individualization comes from a FINITE, PRECHECKED
 list of parameter variants per category (no free random numbers).
 Task order is shuffled. The seed is saved so everything is reproducible.
 
@@ -39,7 +38,7 @@ PRACTICE_TASK = dict(
     min_ratings_count=100, attribute='At least 20W output',
 )
 
-N_SCORED_TASKS = len(CATEGORIES)  # 6
+N_SCORED_TASKS = 3
 
 
 def make_task(cat, variant_index):
@@ -56,9 +55,12 @@ def make_task(cat, variant_index):
 
 
 def build_battery(seed):
-    """One task per category (variant picked at random), shuffled order."""
+    """One category per difficulty, with finite variants and shuffled order."""
     rng = random.Random(seed)
-    tasks = [make_task(c, rng.randrange(len(c['variants']))) for c in CATEGORIES]
+    tasks = []
+    for difficulty in ('easy', 'medium', 'hard'):
+        cat = rng.choice([c for c in CATEGORIES if c['difficulty'] == difficulty])
+        tasks.append(make_task(cat, rng.randrange(len(cat['variants']))))
     rng.shuffle(tasks)
     return tasks
 

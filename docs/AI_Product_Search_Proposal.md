@@ -7,7 +7,7 @@ Classroom study • Four groups • One session • Live product search
 
 We want to understand whether AI helps people find products faster, whether their choices meet the requirements, and what changes when they can use AI and search together. Participants will complete short shopping tasks using an assigned set of tools. We will compare their time, accuracy, search behavior, and experience.
 
-The study will use a randomized, between-subjects design with four groups: Google Web search, default Google, an AI assistant, and AI plus Google Web search. Each participant will complete six individualized product-search tasks in one classroom session. oTree will manage assignment, task delivery, timing, and submissions. Product information will be verified against live-web evidence captured during the tasks.
+The study will use a balanced, between-subjects design with three groups: Google Web search, ChatGPT, and ChatGPT plus Google Web search. Each participant will complete three product-search tasks in one classroom session. oTree will manage assignment, task delivery, timing, and submissions. Product information will be verified against live-web evidence captured during the tasks.
 
 Product search is a useful setting because the task requirements can be stated clearly while the search process remains open. A participant may receive a confident recommendation quickly but still choose a product that fails a requirement. Another participant may take longer because they check the details. Measuring time and verified accuracy separately will help distinguish these outcomes. Search records and participant ratings will provide additional evidence about verification, effort, and confidence.
 
@@ -62,26 +62,27 @@ The last question will be exploratory. Individualized tasks give participants di
 
 ## 2. Experimental groups
 
-Each participant will be randomly assigned to one group and remain in that group for the full session. This avoids carrying experience from one experimental tool condition into another. Participants can still learn across tasks within their assigned group.
+Each participant will be assigned to one group using a fixed S/A/B cycle and remain in that group for the full session. This avoids carrying experience from one experimental tool condition into another. Participants can still learn across tasks within their assigned group.
 
 | Group             | Tools available                                                                                  | What the comparison tells us                                                |
 |-------------------|--------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
 | S: Search only    | Google using the Web filter; product pages reached from those results                            | Reference condition without Google AI Overviews or a separate AI assistant  |
-| D: Default Google | Google’s default results, including AI Overviews when Google displays them; linked product pages | Effect of access to default Google compared with the Web-filter interface   |
 | A: AI only        | A study AI assistant with live web access; direct source/product links returned by the assistant | AI as the route for finding products, with linked-page verification allowed |
 | B: AI and search  | The same assistant as A, plus the same Web-filter Google access as S                             | Effect of making AI available alongside conventional search                 |
 
 “AI only” means participants cannot independently search Google or retailer search boxes. They may open direct product links supplied by the assistant to inspect the offer. In all groups, selecting a variant or checking information on a linked product page is allowed. Starting a separate retailer search or browsing unrelated categories is not allowed. This keeps product discovery tied to the assigned tools.
 
-Participants in B may choose either tool or both. We will record this behavior but keep them in B for the main analysis. In D, AI Overviews may not appear for every query. We will record actual exposure and retain all participants assigned to D. D versus S therefore compares two Google interfaces, not an isolated AI Overview effect: the interfaces can also differ in other result features.
-
-Google’s help page states that the Web filter shows text links without AI Overviews, while Overviews in default search appear when Google determines they are useful \[1\]. The team will test the Web-filter launch route, including `udm=14` if used, immediately before the session. Participants in D will not enter the separate conversational AI Mode.
+Participants in B may choose either tool or both and remain in B for analysis. The Web-filter launch route (`udm=14`) must be checked immediately before class. S and B must avoid Google AI Mode and other AI tools.
 
 ### Assignment and technical consistency
 
-Participants will be allocated approximately equally across S, D, A, and B. Within two broad prior-use categories—less than weekly AI use and weekly-or-more use—randomize using shuffled blocks of four where possible. Incomplete blocks are allowed and recorded; do not create many small age-by-experience strata in a classroom sample.
+Participants are allocated when the session is created, cycling S, A, B by participant slot. `ai_search` requires a multiple of three: 69 gives 23 per arm; 72 gives 24 per arm. `ai_search_70` explicitly permits 24/23/23 so all 70 students can participate. Seventy cannot be split exactly equally across three arms. These are assigned-slot counts; withdrawals, unused links, and comprehension exclusions can reduce completed counts unevenly. Do not remove completed observations just to equalize groups.
 
-The session will use consistent lab computers, browser settings, language, location settings, and study accounts where practical. Personal account histories will be avoided. A and B will use the same assistant, model configuration, web-access setting, and starting instructions. Start a new AI conversation for each task. Record the actual configuration and session date. The AI condition will use a study assistant built through an API; findings will concern that configured assistant rather than every feature of the consumer ChatGPT interface.
+Assignment is stored in every round and revealed after baseline items. There is no mutable allocation queue during concurrent survey submissions. Prior AI use is measured but no longer defines assignment strata. The fixed cycle meets the requested nonrandom allocation, but arrival-ordered links can associate condition with arrival time. Distribute participant links without using performance or prior experience to select conditions, record how they were distributed, and avoid describing the fixed cycle as randomization.
+
+Every consecutive triplet receives the same seeded task battery and order, with one slot per arm. Batteries vary across triplets. This matches task composition across arms when all slots participate.
+
+The implemented version opens the public ChatGPT website in an external tab. It has no embedded assistant or shared AI API quota. A and B should use the same model and web-access settings where available, and start a fresh chat for each task. Check account access and limits before class. oTree logs launcher events, not external conversations or complete browsing histories. Screen recording requires a separately arranged workflow; the app does not implement recording.
 
 ## 3. Hypotheses
 
@@ -91,20 +92,20 @@ H1–H3 will be the primary hypotheses. H4–H8 will be secondary, with H7 limit
 |--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | H1: Speed                | A will be faster than B, and B faster than S. AI may reduce the time spent looking through results; using both tools may add verification time.                                                           | Elapsed task time: A \< B \< S. Test A–B and B–S; report timeouts and accuracy alongside time.                                                                |
 | H2: Accuracy             | B will produce more fully correct choices than S and A because participants can check AI suggestions against product information.                                                                         | Verified success: B \> S and B \> A. Share of requirements met is a supporting outcome.                                                                       |
-| H3: Overall productivity | B will produce more correct completions per minute than S, A, and D. Access to both tools may combine quick discovery with checking.                                                                      | Participant-level verified correct tasks divided by total task minutes: B–S, B–A, B–D.                                                                        |
+| H3: Overall productivity | B will produce more correct completions per minute than S and A. Access to both tools may combine quick discovery with checking.                                                                      | Participant-level verified correct tasks divided by total task minutes: B–S, B–A.                                                                        |
 | H4: Speed and errors     | A will be faster but less accurate than S. Compared with S, A will show more submitted factual claims contradicted by product-page evidence; S will show more missing or unchecked requirements.          | A–S success contrast, H1 timing evidence, and separately coded error and verification measures. Error origin is coded only when supported by records.         |
 | H5: Prior experience     | The performance benefit of A or B relative to S will be larger among participants with less prior AI use.                                                                                                 | Condition × baseline AI-use frequency. Benefits mean higher accuracy/productivity or lower time; interpret the sign separately for each outcome.              |
 | H6: Product choice       | A and B will select lower-priced products than S, after accounting for assigned category and price range.                                                                                                 | Verified selected price and position within the assigned price band. Report whether choices meet all requirements. Lower price alone is not “better quality.” |
 | H7: Concentration        | AI groups may choose from fewer retailers or products.                                                                                                                                                    | Exploratory retailer/product shares and HHI within category/difficulty groups. Different feasible sets prevent a clean identical-task concentration test.     |
 | H8: Perceptions          | A and B will report more ease and reuse intention than S; S will report more trust. Perceived advertising influence will be tested for equivalence rather than inferred from a nonsignificant difference. | Post-study ratings; planned A–S and B–S comparisons. TOST for perceived advertising influence using prespecified bounds.                                      |
 
-Default Google comparisons on time and accuracy—D–S, D–A, and D–B—will be prespecified secondary tests with no assumed ordering. H3 includes B–D as a primary productivity comparison. We will not assume S and A have equal accuracy: H4 tests a directional difference, and lack of significance would not establish equality.
+H4 tests a directional S–A difference; lack of significance does not establish equality.
 
 For H8, a proposed equivalence range is −0.5 to +0.5 points on the 1–7 advertising-influence item. The team must justify and lock this range before collecting outcome data. Equivalence requires the full 90% confidence interval to lie within the range for the relevant TOST comparison; otherwise the finding can be inconclusive.
 
 ## 4. Participants and sample size
 
-We will recruit students from one class. To make the most of the available sample, each student will complete six short tasks using their assigned tools. For example, 40 students would provide up to 240 task responses, with about 10 students in each of the four groups.
+We will recruit about 70 students from one class. Each completes three scored tasks. With 69 participants there are up to 207 scored attempts, with 23 people per arm; with all 70 there are up to 210 attempts, with 24/23/23 assigned slots.
 
 These repeated tasks give us more information about each student's performance, but they do not replace having more participants. We will treat this classroom study as a pilot, focusing on differences in time and accuracy. Comparisons based on prior AI experience will be exploratory because each group will be small.
 
@@ -112,9 +113,9 @@ Participation will be voluntary and will not affect course grades. If course cre
 
 ## 5. Tasks and task bank
 
-Each participant will complete one practice task and six scored tasks. This is the proposed starting load for a 40–45 minute classroom session. Each scored task has a four-minute limit and asks the participant to find one product meeting all listed requirements. More than one answer may be correct.
+Each participant will complete one practice task and three scored tasks. This is the proposed starting load for a 30–35 minute classroom session. Each scored task has a four-minute limit and asks the participant to find one product meeting all listed requirements. More than one answer may be correct.
 
-All scored tasks will be individualized. Participants will receive different combinations of price range, minimum rating, review threshold, and optional attribute. The underlying categories and difficulty mix will be balanced across groups. Individualization does not require every task to have a unique category; it requires a different full set of parameters.
+Each participant receives one easy, one medium, and one hard task, selected from the six-category finite bank. Consecutive S/A/B triplets share categories, variants, and task order. Across triplets, seeds select categories and variants and shuffle order; task instances are not guaranteed unique.
 
 | Template            | Illustrative requirements                                                                                   | Planned difficulty |
 |---------------------|-------------------------------------------------------------------------------------------------------------|--------------------|
@@ -127,7 +128,7 @@ All scored tasks will be individualized. Participants will receive different com
 
 The examples below define the intended task format. Their current feasibility will be checked before use. Before launch, the team will check each allowed parameter combination and retain only combinations with several feasible offers. Use a finite, prechecked parameter bank rather than unrestricted random numbers. Assign task instances independently of tool condition and randomize task order. Save the exact requirements and the randomization seed.
 
-Each person should receive two easy, two medium, and two hard tasks, one from each category. Difficulty will be based on pilot completion and feasibility, not only the number of requirements. Recheck feasibility shortly before the session. These checks establish task feasibility. Participants can submit any qualifying live offer, including products not found during preparation.
+Each person receives one easy, one medium, and one hard task. Difficulty will be based on pilot completion and feasibility, not only the number of requirements. Recheck feasibility shortly before the session. These checks establish task feasibility. Participants can submit any qualifying live offer, including products not found during preparation.
 
 ### Exact task instructions
 
@@ -172,7 +173,7 @@ A second reviewer will independently score a random 20% of submissions and all a
 
 | Variable                                           | Definition                                                                                              | Source                                                  |
 |----------------------------------------------------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------|
-| `participant_id, arm, randomization_block`         | Anonymous code; assigned S/D/A/B; allocation block                                                      | oTree                                                   |
+| `participant_id, arm, randomization_block`         | Anonymous code; assigned S/A/B; matched allocation triplet                                                      | oTree                                                   |
 | `task_id, template_id, task_order, difficulty`     | Individual instance, underlying category template, position, preassigned difficulty                     | oTree                                                   |
 | `task_params`                                      | Exact category, price bounds, thresholds, and attribute requirement                                     | oTree                                                   |
 | `start_ts, end_ts, time_sec`                       | Task reveal to final answer, explicit no-answer submission, or deadline; survey time excluded           | oTree server timestamps                                 |
@@ -181,7 +182,7 @@ A second reviewer will independently score a random 20% of submissions and all a
 | `constraint_status_*`                              | Met / not met / unverifiable for each requirement                                                       | Reviewer scoring                                        |
 | `n_met, n_failed, n_unknown, k`                    | Requirement counts and total number of requirements                                                     | Derived from scoring                                    |
 | `prop_met`                                         | Number verified met divided by k; unknowns are not counted as met                                       | Derived; report uncertainty alongside it                |
-| `correct_per_min`                                  | For each participant: total verified correct tasks ÷ total elapsed task minutes across all six attempts | Derived after verification                              |
+| `correct_per_min`                                  | For each participant: total verified correct tasks ÷ total elapsed task minutes across all three attempts | Derived after verification                              |
 | `reported_*` and `verified_*`                      | Separate submitted and checked price, rating, count, stock, and attribute fields                        | Answer form and reviewer                                |
 | `product_key, offer_key, retailer_key`             | Standardized model/variant, retailer/seller offer, and retailer identity; raw URL retained              | Post-session coding                                     |
 | `price_band_position`                              | (Verified price − task minimum) ÷ (task maximum − task minimum); do not clip values outside 0–1         | Derived; compare within category and report feasibility |
@@ -200,8 +201,7 @@ The price measure will be the selected offer’s listed price because participan
 | `n_revisions`                       | Changes to the selected product/URL after the first complete candidate, not individual keystrokes                                                                             |
 | `used_search, used_ai`              | At least one actual search/message; pane opening alone does not count                                                                                                         |
 | `verification_actions`              | Observable opening/inspection of evidence for a requirement. Viewing a page does not prove the participant read or understood it.                                             |
-| `ai_wait_sec, technical_error`      | API request-to-response delay and failures. Waiting time stays in the user-experienced task time.                                                                             |
-| `overview_seen, overview_count`     | Whether/how often AI Overviews appeared in D, based on recordings; exposure is not randomized separately                                                                      |
+| `ai_wait_sec, technical_error`      | External AI wait/failure measures require recording review; the app has no API timing log. Waiting remains part of task time.                                                                             |
 | `focus_lost`                        | Leaving the oTree tab. Expected during permitted external searches; never an automatic cheating or exclusion measure.                                                         |
 | `missing_claim, contradicted_claim` | Required fact omitted; submitted fact contradicted by evidence. These may coexist on different requirements.                                                                  |
 | `ai_error_carried_forward`          | Assistant gave a contradicted fact and the participant used it in the submitted answer; requires transcript plus product evidence                                             |
@@ -271,37 +271,35 @@ For B only, add: “Did you mainly use search, mainly use AI, or use both about 
 | Stage                          | What happens                                                                                | Time                  |
 |--------------------------------|---------------------------------------------------------------------------------------------|-----------------------|
 | Consent and setup              | Explain tasks, recording, voluntary participation, and anonymous codes; check study browser | 3 minutes             |
-| Pre-survey                     | Background, knowledge, attention check; randomize after baseline items                      | 4 minutes             |
+| Pre-survey                     | Background, knowledge, attention check; reveal preassigned arm after baseline items                      | 4 minutes             |
 | Instructions and comprehension | Show assigned tools and answer rules; comprehension check                                   | 3 minutes             |
 | Practice                       | One unscored task using assigned tools; demonstrate answer and evidence submission          | 3 minutes             |
-| Scored tasks                   | Six tasks, up to four minutes each; order randomized; no correctness feedback               | Up to 24 minutes      |
+| Scored tasks                   | Three tasks, up to four minutes each; order randomized; no correctness feedback               | Up to 12 minutes      |
 | Task ratings                   | Brief ratings after each attempt                                                            | About 2 minutes total |
 | Post-survey and debrief        | Perceptions, workload, feedback; explain later scoring and payment                          | 4 minutes             |
 
-Allow about 43 minutes, with a small buffer for setup. The timer starts when requirements are revealed. It continues during external browsing and AI waiting. The same deadline persists after refreshing or returning to oTree. The answer form autosaves a draft, but a final answer must be confirmed before the deadline. If time expires, mark a timeout and keep the draft for audit without treating it as a submitted answer.
+Allow about 30–35 minutes, with a small buffer for setup. The timer starts when requirements are revealed. It continues during external browsing and AI waiting. The same deadline persists after refreshing or returning to oTree. The answer form autosaves a draft, but a final answer must be confirmed before the deadline. If time expires, mark a timeout and keep the draft for audit without treating it as a submitted answer.
 
 Practice may include feedback about the interface and rules. Scored tasks will not show accuracy feedback, because that could change later verification behavior.
 
-A proposed payment is \$5 participation plus \$0.50 per verified correct task, up to \$8 total. These are planning amounts, subject to the team’s budget and approved consent procedure. Fix and disclose them before recruitment. Base payment is not conditional on accuracy. Pay any performance bonus after verification; do not promise immediate automatic earnings. The end screen confirms completion and explains the payment schedule stated in consent.
+A proposed payment is \$5 participation plus \$0.50 per verified correct task, up to \$6.50 total. These are planning amounts, subject to the team’s budget and approved consent procedure. Fix and disclose them before recruitment. Base payment is not conditional on accuracy. Pay any performance bonus after verification; do not promise immediate automatic earnings. The end screen confirms completion and explains the payment schedule stated in consent.
 
 ## 10. What needs to be built in oTree
 
-oTree will manage consent, surveys, assignment, task parameters, deadlines, submissions, and exports. Google and retailer pages will open in an external study-browser tab. A custom AI pane inside oTree is the proposed implementation for A and B. It must have tested live-web access; otherwise current product facts are not comparable across groups.
+oTree manages consent, surveys, fixed assignment, task parameters, deadlines, submissions, and exports. The implementation uses external Google and ChatGPT tabs. It does not contain an AI API pane, browser recording, or automatic correctness verification.
 
-| Component           | Implementation                                                                                                                                      |
-|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| Page sequence       | Consent → Baseline → Assigned instructions → Comprehension → Practice → six Task/Rating rounds → Post-survey → Completion                           |
-| Search launcher     | Launch Web-filter Google for S/B and default Google for D. Record launcher query and time. Do not claim this captures later searches outside oTree. |
-| AI pane             | Same server-side configuration for A/B; fresh conversation each task; persist messages, returned sources, timings, errors, and configuration        |
-| Permissions         | Server rejects AI requests in S/D. Instructions and recording address external compliance. Hiding buttons cannot prevent every outside action.      |
-| Timing and recovery | Persistent server deadline; restored draft after refresh; reject late final submissions; flag disconnects                                           |
-| Evidence            | Separate consented browser recording and final-page captures, linked by participant/task code; restricted access                                    |
-| Scoring             | Reviewer form or scoring sheet imported after the session; no invented automatic catalog check                                                      |
-| Exports             | Participant table; task-attempt table; internal event/AI-message table; verification table; evidence index                                          |
+| Component | Implemented behavior |
+|---|---|
+| Page sequence | Consent → Background → Knowledge → Instructions → Comprehension (up to 3 attempts) → Practice → 3 scored Task/Rating rounds → Post-survey → Completion |
+| Assignment | S/A/B cycle at session creation; equal mode requires a multiple of 3; explicit near-equal mode accepts 70 |
+| Task bank | One easy, medium, hard per person; same battery and order within each allocation triplet |
+| Tools | Web-filter Google for S/B; public ChatGPT tab for A/B |
+| Logging | Launcher queries, AI opens, focus changes, draft, final answer and timing; no external chat capture |
+| Timing | Persistent server deadline and draft recovery; late/timeout submissions flagged |
+| Scoring | Reviewers verify product claims later; no automatic correctness bonus calculation |
+| Evidence | Separate recording/capture process must be arranged before retaining the consent recording claim |
 
-oTree live pages support interactive messages and event storage. Its documentation describes asynchronous API calls in oTree 6.0 for external AI services \[2\]. This is useful for a classroom where many participants may send requests together. The team must still implement and test the assistant and recording workflow.
-
-Ordinary browser security restricts a page’s access to other sites \[3\]. oTree therefore cannot automatically read every Google query, retailer click, or external AI action. For this version, complete external process measures require recording review. If recording is incomplete, flag those measures as missing rather than filling them with self-reports or zeros.
+For concurrent classroom operation and tests, see the README. Browser restrictions mean oTree cannot read activity inside Google, ChatGPT, or retailer tabs. External process measures require separately collected evidence and must be marked missing when unavailable.
 
 ## 11. Analysis plan
 
@@ -309,9 +307,9 @@ Analyze participants according to their assigned group. The main comparisons con
 
 | Outcome                | Planned analysis                                                                                                                                                                                                                                                                                               |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Verified success, H2   | Logistic mixed model with condition, template/category, preassigned difficulty, task order, and randomization stratum; participant random intercept. Report predicted probabilities and percentage-point differences.                                                                                          |
+| Verified success, H2   | Logistic mixed model with condition, template/category, preassigned difficulty, task order, and baseline AI-use frequency; participant random intercept. Report predicted probabilities and percentage-point differences.                                                                                          |
 | Time, H1               | Analyze all-attempt elapsed time, including early no-answer exits and deadline-valued timeouts, with participant dependence accounted for. Report timeout and no-answer rates separately. A secondary time-to-submission model can treat timeouts as censored. Faster exit alone is not successful completion. |
-| Productivity, H3       | Participant-level correct tasks per total task minute, including failed/no-answer attempts and full deadlines for timeouts. Compare groups with randomization-respecting inference or participant-level regression; assess distribution in pilot.                                                              |
+| Productivity, H3       | Participant-level correct tasks per total task minute, including failed/no-answer attempts and full deadlines for timeouts. Compare groups with allocation-triplet-adjusted inference or participant-level regression; assess distribution in pilot.                                                              |
 | Partial accuracy       | Compare verified-met proportion while retaining k and uncertain counts; repeated attempts remain clustered within participants.                                                                                                                                                                                |
 | Errors and process, H4 | Compare recorded error rates and verification behaviors. Distinguish observed actions from inferred mechanisms; use participant-level resampling or suitable count/binary models.                                                                                                                              |
 | Prior experience, H5   | Add condition × PS2 to success, time, and productivity models. Treat ordinal PS2 trend as a prespecified simplification and show descriptive category patterns. Interactions are likely imprecise in a small class.                                                                                            |
@@ -319,11 +317,11 @@ Analyze participants according to their assigned group. The main comparisons con
 | Concentration, H7      | Descriptive category-level counts, shares, overlap, and HHI where cell sizes permit; no confirmatory same-task claim                                                                                                                                                                                           |
 | Perceptions, H8        | Between-group comparisons, not paired AI-versus-search tests; ordinal models or prespecified mean comparisons. TOST for the advertising-influence item with bounds fixed before outcomes.                                                                                                                      |
 
-Do not add post-task perceived difficulty, number of queries, or verification behavior as controls in the primary treatment models. These may be outcomes of the treatment itself. Individual task IDs cannot all receive fixed effects when each unique task is observed only once; use shared template/category and recorded parameters instead.
+Do not add post-task perceived difficulty, number of queries, or verification behavior as controls in the primary treatment models. These may be outcomes of the treatment itself. Task variants repeat across matched allocation triplets. Use shared template/category and recorded parameters; account for the matching when feasible.
 
-**Multiple testing:** preregister H1–H3 as the primary family. Apply Holm correction across the seven primary directional contrasts listed above: two for H1, two for H2, and three for H3. Report estimates and two-sided confidence intervals as well. Use Benjamini–Hochberg at q = .05 for the prespecified secondary test family, including the maximum of the two one-sided p-values for each equivalence comparison. Keep purely descriptive H7 summaries outside confirmatory claims.
+**Multiple testing:** preregister H1–H3 as the primary family. Apply Holm correction across the six primary directional contrasts listed above: two for H1, two for H2, and two for H3. Report estimates and two-sided confidence intervals as well. Use Benjamini–Hochberg at q = .05 for the prespecified secondary test family, including the maximum of the two one-sided p-values for each equivalence comparison. Keep purely descriptive H7 summaries outside confirmatory claims.
 
-For robustness, report success uncertainty bounds, technical-failure rates, missingness by group, and results with versus without documented protocol violations. If a mixed model fails with the small sample, use prespecified participant-summary and blocked randomization analyses rather than trying many models until one is significant. Do not use a test of demographic balance as proof that randomization worked; report allocation records and descriptive balance.
+For robustness, report success uncertainty bounds, technical-failure rates, missingness by group, and results with versus without documented protocol violations. If a mixed model fails with the small sample, use prespecified participant-summary and allocation-triplet-adjusted analyses rather than trying many models until one is significant. Do not use a test of demographic balance as proof that assignment removed confounding; report allocation records and descriptive balance.
 
 ### Missing data and exclusions
 
@@ -335,9 +333,8 @@ Distinguish technical missingness from task failure. An ordinary working-tool ti
 
 | Issue                                       | Response                                                                                                                                                       |
 |---------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Four groups and a small classroom           | Check detectable effects before launch. Treat estimates as pilot evidence if precision is limited; do not promise population-wide findings.                    |
+| Three groups and a small classroom           | Check detectable effects before launch. Treat estimates as pilot evidence if precision is limited; do not promise population-wide findings.                    |
 | Web filter fails or Google changes          | Test before the session. Pause the affected procedure rather than silently replacing search with another product or untested extension.                        |
-| Few AI Overviews in D                       | Report exposure frequency. Retain D assignment; do not claim an experimentally isolated Overview effect.                                                       |
 | AI configuration changes or service is slow | Record settings and response times; use the same configuration in A/B. Do not switch models partway without documenting a protocol deviation.                  |
 | Price, availability, or rating changes      | Retain task-time evidence and review promptly. Mark unresolved facts unknown and report uncertainty by group.                                                  |
 | Task becomes infeasible                     | Check before launch and record later concerns. Do not decide infeasibility merely because participants failed; investigate independently of group performance. |
@@ -346,11 +343,11 @@ Distinguish technical missingness from task failure. An ordinary working-tool ti
 | Mechanism claims exceed evidence            | Code only visible actions and supported errors. Treat mediation and behavioral associations as exploratory.                                                    |
 | Live web limits scoring and concentration   | Report unknown facts and changing choice opportunities. No global optimality claims or identical-task concentration claims.                                    |
 
-This is a randomized classroom experiment using live websites. It is not a representative consumer field experiment. It measures short-run performance on constrained tasks, not purchases, long-term learning, or open-ended shopping preferences. The theoretical contribution will depend on the results and a separate literature review; this proposal does not claim to be the first study of its kind.
+This is a classroom experiment with balanced deterministic allocation using live websites. It is not a representative consumer field experiment. It measures short-run performance on constrained tasks, not purchases, long-term learning, or open-ended shopping preferences. The theoretical contribution will depend on the results and a separate literature review; this proposal does not claim to be the first study of its kind.
 
 ## 13. Decisions to finalize before collection
 
-1.  Confirm the class size and session date; divide students as evenly as possible across the four groups and report the study as a classroom pilot.
+1.  Confirm the class size and session date; divide students as evenly as possible across the three groups and report the study as a classroom pilot.
 2.  Choose and test the exact AI model, live-web access, browser configuration, location setting, and recording method.
 3.  Validate individualized task parameters and four-minute limits with a small usability pilot.
 4.  Approve consent, recording access/retention, participation alternative, payment amounts, and bonus-payment schedule.
