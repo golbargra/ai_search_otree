@@ -57,26 +57,28 @@ class C(BaseConstants):
 # MODELS
 # =====================================================================
 class Subsession(BaseSubsession):
+    pass
 
-    def creating_session(self):
-        """
-        Called once per session at creation. Assigns arm and battery to
-        every player. Assignment is BLOCKED on self-reported prior AI
-        experience if available (falls back to random if pre-survey has
-        not been submitted).
-        """
-        if self.round_number != 1:
-            return
-        for p in self.get_players():
-            # Deterministic seed per participant for reproducibility
-            seed = p.participant.id_in_session * 9973 + self.session.id
-            rng = random.Random(seed)
-            # Simple random arm assignment; production version should
-            # implement stratified/blocked assignment.
-            p.participant.vars['arm'] = rng.choice(C.ARMS)
-            p.participant.vars['battery'] = task_bank.build_battery(seed)
-            p.participant.vars['practice_task'] = task_bank.get_practice_task()
-            p.participant.vars['n_correct'] = 0
+
+def creating_session(self):
+    """
+    Called once per session at creation. Assigns arm and battery to
+    every player. Assignment is BLOCKED on self-reported prior AI
+    experience if available (falls back to random if pre-survey has
+    not been submitted).
+    """
+    if self.round_number != 1:
+        return
+    for p in self.get_players():
+        # Deterministic seed per participant for reproducibility
+        seed = p.participant.id_in_session * 9973 + self.session.id
+        rng = random.Random(seed)
+        # Simple random arm assignment; production version should
+        # implement stratified/blocked assignment.
+        p.participant.vars['arm'] = rng.choice(C.ARMS)
+        p.participant.vars['battery'] = task_bank.build_battery(seed)
+        p.participant.vars['practice_task'] = task_bank.get_practice_task()
+        p.participant.vars['n_correct'] = 0
 
 
 class Group(BaseGroup):
@@ -279,11 +281,11 @@ class Task(Page):
         return True
 
     def vars_for_template(self):
-        task = get_task_for_round(self.player)
-        self.player.task_id     = task['task_id']
-        self.player.task_json   = json.dumps(task)
-        self.player.is_practice = is_practice_round(self.round_number)
-        self.player.start_ts    = time.time()
+        task = get_task_for_round(self)
+        self.task_id     = task['task_id']
+        self.task_json   = json.dumps(task)
+        self.is_practice = is_practice_round(self.round_number)
+        self.start_ts    = time.time()
         return dict(
             task=task,
             arm=self.participant.vars.get('arm', 'S'),
@@ -294,12 +296,12 @@ class Task(Page):
         )
 
     def before_next_page(self, timeout_happened=False):
-        self.player.submit_ts = time.time()
-        if self.player.start_ts:
-            self.player.time_sec = self.player.submit_ts - self.player.start_ts
-        task = get_task_for_round(self.player)
-        score_answer(self.player, task)
-        if self.player.success and not self.player.is_practice:
+        self.submit_ts = time.time()
+        if self.start_ts:
+            self.time_sec = self.submit_ts - self.start_ts
+        task = get_task_for_round(self)
+        score_answer(self, task)
+        if self.success and not self.is_practice:
             self.participant.vars['n_correct'] = self.participant.vars.get('n_correct', 0) + 1
 
 
